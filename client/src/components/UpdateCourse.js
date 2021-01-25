@@ -9,39 +9,70 @@ export default class UpdateCourse extends Component {
         description: '',
         estimatedTime: '',
         materialsNeeded: '',
+        teacherFirstName: '',
+        teacherLastName: '',
+        teacherId: '',
+        errors: []
     }
-
+    // initialize state
 
 
 componentDidMount() {
-    this.onLoad();
+        const courseId = this.props.match.params.id;
+            // match URL parameter
+        this.props.context.data.getCourse(courseId) 
+            // getCourse from Data.js
+            .then( course => {
+                    if(course.course.length < 1) {
+                        this.props.history.push('/notfound');
+                        // go to notfound if no course matching ID supplied
+                    } else if (this.props.context.authenticatedUser.user[0].id !== course.course[0].teacher.id) {
+                       // blocked if trying to update course where teacher id doesn't match user ID
+                        this.props.history.push('/forbidden');
+                    } else {
+                        console.log(course);
+
+                        // if all ok, set State to match all course info from getCourse
+                        this.setState(() => {
+                            return { 
+                                title: course.course[0].title,
+                                description: course.course[0].description,
+                                estimatedTime: course.course[0].estimatedTime,
+                                materialsNeeded: course.course[0].materialsNeeded,
+                                teacherFirstName: course.course[0].teacher.firstName,
+                                teacherLastName: course.course[0].teacher.lastName,
+                                teacherId: course.course[0].teacher.id
+                            }
+                        })
+            }
+        }) .catch((errors) => {
+            console.log(errors);
+            this.props.history.push('/error');
+        });
+      
+    // this.onLoad(); 
 }
 
-onLoad = () => {
-    this.setState(() => {
-        return {
-            title: document.getElementById('title').value,
-            description: document.getElementById('description').value,
-            estimatedTime: document.getElementById('estimatedTime').value,
-            materialsNeeded: document.getElementById('materialsNeeded').value
-        };
-    });
-}
+// Pretty sure this code is not needed any more- not sure why I had it
+
+// onLoad = () => {
+//     this.setState(() => {
+//         return {
+//             title: document.getElementById('title').value,
+//             description: document.getElementById('description').value,
+//             estimatedTime: document.getElementById('estimatedTime').value,
+//             materialsNeeded: document.getElementById('materialsNeeded').value
+//         };
+//     });
+// }
 
 
     render() {
 
         const {
-            title,
-            description,
-            estimatedTime,
-            materialsNeeded
+            errors
         } = this.state;
-
-        const results = this.props.context.courseList;
-        console.log(results);
-        let courseDetail = results.filter(course => course.id.toString() === this.props.match.params.id.toString())
-
+        
     
             return (
                 <div className="bounds course--detail">
@@ -52,14 +83,19 @@ onLoad = () => {
                                 <div className="course--header">
                                     <h4 className="course--label">Course</h4>
                                     <div>
+                                   {/* show errors if not meeting requirements */}
+                                    <ErrorsDisplay errors={errors} />   
+                                     </div>
+                                    <div>
+                                        {/* each input has onchange which updates state and pulls value from state */}
                                         <input id="title" name="title" type="text" className="input-title course--title--input" placeholder="Course title..."
-                                        defaultValue={courseDetail[0].title} onChange={this.change} />
+                                        value={this.state.title} onChange={this.change} />
                                     </div>
-                                    <p>By {courseDetail[0].teacher.firstName} {courseDetail[0].teacher.lastName}</p>
+                                    <p>By {this.state.teacherFirstName} {this.state.teacherLastName}</p>
                                 </div>
                             <div className="course--description">
                                 <div>
-                                    <textarea id="description" name="description" className="" placeholder="Course description..." defaultValue={courseDetail[0].description} onChange={this.change}  >
+                                    <textarea id="description" name="description" className="" placeholder="Course description..." value={this.state.description} onChange={this.change}  >
                 
                                 </textarea></div>
                             </div>
@@ -71,12 +107,12 @@ onLoad = () => {
                                     <h4>Estimated Time</h4>
                                     <div>
                                         <input id="estimatedTime" name="estimatedTime" type="text" className="course--time--input"
-                                        placeholder="Hours" defaultValue={courseDetail[0].estimatedTime} onChange={this.change}  />
+                                        placeholder="Hours" value={this.state.estimatedTime} onChange={this.change}  />
                                     </div>
                                 </li>
                                 <li className="course--stats--list--item">
                                     <h4>Materials Needed</h4>
-                                    <div><textarea id="materialsNeeded" name="materialsNeeded" className="" placeholder="List materials..." defaultValue={courseDetail[0].materialsNeeded} onChange={this.change}  >
+                                    <div><textarea id="materialsNeeded" name="materialsNeeded" className="" placeholder="List materials..." value={this.state.materialsNeeded} onChange={this.change}  >
 
                                     </textarea></div>
                                 </li>
@@ -96,39 +132,83 @@ onLoad = () => {
 
     change = (event) => {
         const name = event.target.name;
-        const value = event.target.value;
-
+        let value = event.target.value;
+        if (value === "") {
+            value = null; // makes sure if empty then it is flagged as invalid if required field
+        }
         this.setState(() => {
             return {
-                [name]: value  // why this syntax
+                [name]: value  
             };
         });
-    }
+    
+};
 
     submit = (e) => {
         e.preventDefault();
         const { context } = this.props;
+        // set up all parameters needed for updateCourse function
         const { title, description, estimatedTime, materialsNeeded } = this.state;
         const courseId = this.props.match.params.id;
-        const userId = this.props.context.authenticatedUser.user[0].id;
-        const emailAddress = this.props.context.authenticatedUser.user[0].emailAddress;
-        const password = this.props.context.currentPassword;
-        this.props.context.data.updateCourse(courseId, emailAddress, password, title, description, estimatedTime, materialsNeeded, userId)
-        // this.props.history.push(`/courses/${this.props.match.params.id}`);
-        .then(() => {
-            // // this.props.history.push('/');
-            // window.location.href = '/';
-        });  
-        console.log('Successful update');
+        const userId = context.authenticatedUser.user[0].id;
+        const emailAddress = context.authenticatedUser.user[0].emailAddress;
+        const password = context.currentPassword;
+        
+        context.data.updateCourse(courseId, emailAddress, password, title, description, estimatedTime, materialsNeeded, userId) 
+            // call update course from Data.js
+        .then( errors => {
+                 if (errors.length) {
+                    console.log(errors);
+                    const list = [];
+                    for (var i = 0; i < errors.length; i++) {
+                      list.push(errors[i].message)
+                      this.setState({
+                        errors: list,
+                      })
+                    }
+                    // update errors which will display through ErrorsDisplay function (bottom)
+               
+             } else {
+               window.location.href = '/';
+               console.log('Successful update');
+              }
       
+    }).catch((errors) => {
+        console.log(errors);
+        this.props.history.push('/error');
+    });
     }
+
 
     cancel = (e) => {
         e.preventDefault();
         this.props.history.push(`/courses/${this.props.match.params.id}`);
+        // go back to prev page (course detail)
     }
 
 }
+
+function ErrorsDisplay({ errors }) {
+    let errorsDisplay = null;
+  
+    if (errors.length) {
+      errorsDisplay = (
+            <div>
+              <h2 class="validation--errors--label">Validation errors</h2>
+              <div class="validation-errors">
+                <ul>
+                 
+                { errors.map((error, i) => <li key={i}> {error} </li>)}   
+                  
+                </ul>
+              </div>
+            </div>
+      )
+    }
+
+    return errorsDisplay;
+
+};
         
 
   

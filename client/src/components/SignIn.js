@@ -4,6 +4,7 @@ import Form from './Form';
 
 export default class SignIn extends Component {
 
+    // initialize state
     state = {
         emailAddress: '',
         password: '',
@@ -17,12 +18,14 @@ export default class SignIn extends Component {
             password,
             errors
         } = this.state;
+        // reference to state with password etc.
 
         return (
-            <div class="bounds">
-                <div class="grid-33 centered signin">
+            <div className="bounds">
+                <div className="grid-33 centered signin">
                     <h1>Sign In</h1>
                     <Form
+                    // send props to form with all the needed functions and fields
                         cancel={this.cancel}
                         errors={errors}
                         submit={this.submit}
@@ -54,14 +57,14 @@ export default class SignIn extends Component {
 
     }
 
-
+    // capture any changes and update state
     change = (event) => {
         const name = event.target.name;
         const value = event.target.value;
 
         this.setState(() => {
             return {
-                [name]: value  // why this syntax
+                [name]: value  
             };
         });
     }
@@ -71,24 +74,28 @@ export default class SignIn extends Component {
             const { emailAddress, password } = this.state;
             const { from } = this.props.location.state || { from: { pathname: '/' }}
             context.actions.signIn(emailAddress, password)
+                // run signIn fucntion from context
             .then( user => {
                 if(user === null) {
                     this.setState(() => {
                         return { errors: [ 'Failed log-in' ]};
+                        // display error message through ErrorsDisplay in Form.js
                     })
                 } else {
                     this.props.history.push(from);
-                    console.log(`Successful log-n ${emailAddress}!`)
+                        // see const { from } above- sends user back to page they were on before
+                    console.log(`Successful log-in ${emailAddress}!`)
                 }
             })
             .catch( err => {
                 console.log(err);
-                this.props.history.push('/notfound');
+                this.props.history.push('/error');
             })
     }
 
     cancel = () => {
         this.props.history.push('/');
+        // back to home
     }
 
 }

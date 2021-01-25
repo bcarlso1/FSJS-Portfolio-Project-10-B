@@ -1,6 +1,8 @@
 
 import React from 'react';
 
+// provides content to sign up and sign in
+
 export default (props) => {
     const { 
         cancel,
@@ -13,6 +15,7 @@ export default (props) => {
     function handleCancel(event) {
         event.preventDefault();
         cancel();
+        // cancel and submit, below, are from props
     }
 
     function handleSubmit(event) {
@@ -24,7 +27,8 @@ export default (props) => {
         <div>
             <ErrorsDisplay errors={errors} />
             <form onSubmit={handleSubmit}>
-                {elements()}
+                {elements()} 
+                {/* get elements and errors from props */}
                 <button className="button" type="submit">Submit</button>
                 <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
             </form>
@@ -39,8 +43,12 @@ function ErrorsDisplay({ errors }) {
         errorsDisplay = (
             <div>
                 <h2> Validation Error</h2>
-                <div>{ errors } </div>
-            </div>
+                <ul>
+                { errors.map((error, i) => <li key={i}> {error} </li>)}   
+                </ul>
+               
+        </div>
+        
         );
     }
 

@@ -3,8 +3,10 @@ import { Redirect } from 'react-router-dom';
 
 export default ({ context }) => {
     context.actions.signOut();
+    // signOut function in context
     
     return (
-     <Redirect href="/" />
+     <Redirect to="/" />
+     // go to home
     );
 }

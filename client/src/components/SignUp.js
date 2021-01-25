@@ -3,6 +3,7 @@ import Form from './Form';
 
 export default class UserSignUp extends Component {
     
+    // initialize state
     state = {
         firstName: '',
         lastName: '',
@@ -14,6 +15,7 @@ export default class UserSignUp extends Component {
     
     render() {
 
+            // access state
         const {
             firstName,
             lastName,
@@ -26,9 +28,10 @@ export default class UserSignUp extends Component {
 
         return (
     
-            <div class="bounds">
-                <div class="grid-33 centered signin">
+            <div className="bounds">
+                <div className="grid-33 centered signin">
                     <h1>Sign Up</h1>
+                        {/* send props to Form.js, including elements */}
                         <Form
                             cancel={this.cancel}
                             errors={errors}
@@ -81,6 +84,7 @@ export default class UserSignUp extends Component {
 
     }
 
+        // update state with changes
     change = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -113,12 +117,16 @@ export default class UserSignUp extends Component {
 
       
         context.data.createUser(user)
+        // call createUser from Data.js
             .then( errors => {
                 if (errors.length) {
                     this.setState({ errors });
+                    console.log(errors);
+                    // show errors in ErrorsDisplay in Form.ks
                 } else {
                     console.log(`${firstName} is signed up!`)
                     context.actions.signIn(emailAddress, password)
+                        // if success, signIn function from context
                         .then(() => {
                             this.props.history.push('/');
                         });
@@ -126,7 +134,7 @@ export default class UserSignUp extends Component {
             })
             .catch((errors) => {
                 console.log(errors);
-                this.props.history.push('/notfound');
+                this.props.history.push('/error');
             });
     }
 
