@@ -94,7 +94,7 @@ async createUser(user) {
 
 // PUT request for course
   async updateCourse(courseId, emailAddress, password, title, description, estimatedTime, materialsNeeded, userId) {
-    const response = await this.api(`/courses/${courseId}`, 'PUT', { "title": title, "description": description, "estimatedTIme": estimatedTime, "materialsNeeded": materialsNeeded, "userId": userId }, true, { emailAddress, password });
+    const response = await this.api(`/courses/${courseId}`, 'PUT', { "title": title, "description": description, "estimatedTime": estimatedTime, "materialsNeeded": materialsNeeded, "userId": userId }, true, { emailAddress, password });
     if (response.status === 204) {
       console.log('success');
       return []; // empty array
