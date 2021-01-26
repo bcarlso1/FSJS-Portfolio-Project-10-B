@@ -90,7 +90,7 @@ export default class CreateCourse extends Component {
         const userId = context.authenticatedUser.user[0].id;
         const emailAddress = context.authenticatedUser.user[0].emailAddress;
         const password = context.currentPassword;
-      
+        
         context.data.createCourse(emailAddress, password, title, description, estimatedTime, materialsNeeded, userId)
             .then( errors => {
               if (errors.length) {
@@ -105,7 +105,7 @@ export default class CreateCourse extends Component {
                 }
               console.log(errors);
               } else {
-                window.location.href = '/';
+                 window.location.href = '/';
                 console.log('Successful update');
                }
    

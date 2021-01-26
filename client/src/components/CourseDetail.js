@@ -25,18 +25,38 @@ componentDidMount() { // on page load
                         // if nothing returned, return not found
                     } else {
                         // set state with info from retrieved course
+                        
                         this.setState(() => {
                             return { 
                                 title: course.course[0].title,
-                                // add * for React Markdown bulleted list
-                                description: `* ${course.course[0].description}`,
+                                description: `- ${course.course[0].description}`,
                                 estimatedTime: course.course[0].estimatedTime,
-                                materialsNeeded: `* ${course.course[0].materialsNeeded}`,
                                 teacherFirstName: course.course[0].teacher.firstName,
                                 teacherLastName: course.course[0].teacher.lastName,
                                 teacherId: course.course[0].teacher.id
                             }
-                })
+                });
+                // format for React Markdown
+                if (course.course[0].materialsNeeded !== null && course.course[0].materialsNeeded !== "" ) {
+ 
+                    let materialsNeededString = `- ${course.course[0].materialsNeeded}`;
+         
+                    let materialsNeededMarkdown = materialsNeededString.replace(/, /g, "` `-");
+                    
+                    this.setState(() => {
+                        return { 
+                            materialsNeeded: materialsNeededMarkdown
+                        }
+            })
+                } else {
+                    console.log('null');
+                    this.setState(() => {
+                        return { 
+                            materialsNeeded: ""
+                        }
+            })
+                }
+                
             }
             }) .catch((errors) => {
                 console.log(errors);
@@ -44,6 +64,8 @@ componentDidMount() { // on page load
             });
         
     }
+
+    
 
     render() {        
                 return (
@@ -133,7 +155,9 @@ componentDidMount() { // on page load
             context.data.deleteCourse(courseId, emailAddress, password)
             // delete function from data.js
                 .then(() => {
-                    window.location.href = '/';
+                    window.location.href = "/";
+               
+              
                 }).catch((errors) => {
                     console.log(errors);
                     this.props.history.push('/error');

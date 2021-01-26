@@ -13,27 +13,25 @@ import Header from './components/Header';
 import NotFound from './components/NotFound';
 import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
-import SignOut from './components/SignOut';
+import UserSignUp from './components/UserSignUp';
+import UserSignIn from './components/UserSignIn';
+import UserSignOut from './components/UserSignOut';
 import withContext from './Context';
 import PrivateRoute from './components/PrivateRoute';
 import Forbidden from './components/Forbidden';
 import UnhandledError from './components/UnhandledError';
-import { withRouter } from 'react-router-dom';
 
 // subscribe components to context
-const SignUpWithContext = withContext(SignUp);
-const SignInWithContext = withContext(SignIn);
+const UserSignUpWithContext = withContext(UserSignUp);
+const UserSignInWithContext = withContext(UserSignIn);
 const HeaderWithContext = withContext(Header);
-const SignOutWithContext = withContext(SignOut);
+const UserSignOutWithContext = withContext(UserSignOut);
 const CourseDetailWithContext = withContext(CourseDetail);
 const UpdateCourseWithContext = withContext(UpdateCourse);
 const CreateCourseWithContext = withContext(CreateCourse);
 const CoursesWithContext = withContext(Courses);
-const ForbiddenWithContext = withContext(Forbidden);
-// subscribe Forbidden to withRouter to get props.history
-const ForbiddenWithRouter = withRouter(ForbiddenWithContext);
+
+
 
 
 export default class App extends Component {
@@ -50,12 +48,13 @@ export default class App extends Component {
                {/* Private routes only accessible if authenticated */}
                 <PrivateRoute exact path="/courses/create" component={CreateCourseWithContext} />
                 <PrivateRoute exact path="/courses/:id/update" component={UpdateCourseWithContext} />
-                <Route path="/signout" component={SignOutWithContext} />
+                <Route path="/signout" component={UserSignOutWithContext} />
                 <Route exact path="/courses/:id/" component={CourseDetailWithContext} />
-                <Route path="/signup" component={SignUpWithContext} />
-                <Route path="/signin" component={SignInWithContext} />
+                <Route path="/signup" component={UserSignUpWithContext} />
+                <Route path="/signin" component={UserSignInWithContext} />
                 <Route path="/error" component={UnhandledError} />
-                <Route path="/forbidden" component={ForbiddenWithRouter} />
+                <Route path="/forbidden" component={Forbidden} />
+                <Route path="/notfound" component={NotFound} />
                 <Route component={NotFound} />
               </Switch>
               

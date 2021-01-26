@@ -33,6 +33,7 @@ componentDidMount() {
                         console.log(course);
 
                         // if all ok, set State to match all course info from getCourse
+                        
                         this.setState(() => {
                             return { 
                                 title: course.course[0].title,
@@ -149,12 +150,13 @@ componentDidMount() {
         const { context } = this.props;
         // set up all parameters needed for updateCourse function
         const { title, description, estimatedTime, materialsNeeded } = this.state;
+        
         const courseId = this.props.match.params.id;
         const userId = context.authenticatedUser.user[0].id;
         const emailAddress = context.authenticatedUser.user[0].emailAddress;
         const password = context.currentPassword;
         
-        context.data.updateCourse(courseId, emailAddress, password, title, description, estimatedTime, materialsNeeded, userId) 
+         context.data.updateCourse(courseId, emailAddress, password, title, description, estimatedTime, materialsNeeded, userId) 
             // call update course from Data.js
         .then( errors => {
                  if (errors.length) {
@@ -169,7 +171,8 @@ componentDidMount() {
                     // update errors which will display through ErrorsDisplay function (bottom)
                
              } else {
-               window.location.href = '/';
+              
+             window.location.href = '/';
                console.log('Successful update');
               }
       
@@ -177,7 +180,7 @@ componentDidMount() {
         console.log(errors);
         this.props.history.push('/error');
     });
-    }
+     }
 
 
     cancel = (e) => {

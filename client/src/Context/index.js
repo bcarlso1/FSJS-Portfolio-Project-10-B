@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Data from '../Data';
-import config from '../components/config';
 import Cookies from 'js-cookie';
 
 const Context = React.createContext(); 

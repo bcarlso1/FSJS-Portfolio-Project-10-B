@@ -399,6 +399,8 @@ p {
 .course--add--module {
   background: #eee;
   text-align: center;
+  margin-top: 25px;
+
 }
 /* line 137, ../sass/global.sass */
 .course--add--module:hover .course--add--title {
@@ -413,7 +415,6 @@ p {
   color: #999;
   display: inline-block;
   font-size: 18px;
-  padding-top: 40px;
 }
 /* line 149, ../sass/global.sass */
 .course--add--title .add {

@@ -108,7 +108,8 @@ async createUser(user) {
   // POST request for course
   async createCourse(emailAddress, password, title, description, estimatedTime, materialsNeeded, userId) {
     console.log('in Data.js');
-    const response = await this.api('/courses', 'POST', { "title": title, "description": description, "estimatedTIme": estimatedTime, "materialsNeeded": materialsNeeded, "userId": userId }, true, { emailAddress, password });
+    const response = await this.api('/courses', 'POST', { "title": title, "description": description, "estimatedTime": estimatedTime, "materialsNeeded": materialsNeeded, "userId": userId }, true, { emailAddress, password });
+    
     if (response.status === 201) {
       console.log(response.status);
       return []; // empty array
