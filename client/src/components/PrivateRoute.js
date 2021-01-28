@@ -15,7 +15,7 @@ export default ({ component: Component, ...rest }) => {
                         // if authenticatedUser, display the component & its props   
                     ) : (
                         <Redirect to={{
-                            pathname: '/forbidden',
+                            pathname: '/signin',
                             state: { from: props.location },
                         }}
                         />
