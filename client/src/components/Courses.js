@@ -12,9 +12,17 @@ export default class Courses extends Component {
 
 
     componentDidMount() {
-    
+        const { context } = this.props;
+
+        if (context.authenticatedUser !== null) {
+            const emailAddress = context.authenticatedUser.user[0].emailAddress;
+            const password = context.currentPassword;
+           
+            context.actions.signInCheck(emailAddress, password)
+        }
         
-        this.props.context.data.getAllCourses() 
+
+        context.data.getAllCourses() 
         // getAllCourses from Data.js
         // set State value as all courses info
       .then( courses => {

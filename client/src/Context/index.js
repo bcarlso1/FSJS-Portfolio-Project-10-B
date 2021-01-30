@@ -47,6 +47,7 @@ export class Provider extends Component {
         actions: { 
           signIn: this.signIn,
           signOut: this.signOut,
+          signInCheck: this.signInCheck,
      
         }
       };
@@ -77,6 +78,25 @@ export class Provider extends Component {
       Cookies.set('currentPassword', JSON.stringify(password), { expires: 1 });
     }
     return user;
+  }
+
+  
+
+  signInCheck = async (emailAddress, password) => {
+    const user = await this.data.getUser(emailAddress, password);
+    if (user !== null) {
+      Cookies.remove('authenticatedUser');
+      Cookies.remove('currentPassword');
+      
+      this.setState(() => {
+        return {
+          authenticatedUser: null,
+          currentPassword: null,
+        };
+      });
+
+      
+    }
   }
 
   // remove cookies and auth user from state
