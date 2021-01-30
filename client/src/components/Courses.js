@@ -19,6 +19,7 @@ export default class Courses extends Component {
             const password = context.currentPassword;
            
             context.actions.signInCheck(emailAddress, password)
+           
         }
         
 

@@ -84,7 +84,7 @@ export class Provider extends Component {
 
   signInCheck = async (emailAddress, password) => {
     const user = await this.data.getUser(emailAddress, password);
-    if (user !== null) {
+    if (user === null) {
       Cookies.remove('authenticatedUser');
       Cookies.remove('currentPassword');
       
