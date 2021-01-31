@@ -1,11 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const bcryptjs = require('bcryptjs');
 const auth = require('basic-auth');
 const { check, validationResult } = require('express-validator');
 const User = require('../models').User;
 const Course = require('../models').Course;
-let message = null;
 
 
 function asyncHandler(cb){
@@ -15,24 +14,33 @@ function asyncHandler(cb){
       } catch(error){
           res.status(500).send(error);
           console.log(error.message);
+        
       }
   }
 }
 
 // authenticate
 const authenticateUser = asyncHandler(async (req, res, next) => {
+  
+  let message = null;
+
   const credentials = auth(req);
+  
 
   if(credentials) {
+ 
     const user = await User.findAll({ where: {
       emailAddress: credentials.name
     }});
+      
       if (user[0] != undefined) {
-        const authenticated = bcryptjs
-            .compareSync(credentials.pass, user[0].dataValues.password);
-
+ 
+        authenticated = bcryptjs
+             .compareSync(credentials.pass, user[0].dataValues.password);
+        
           if (authenticated) {
-            req.currentUser = user;
+              req.currentUser = user;
+            
           } else {
             message = "Authentication failed for username: ${user.username}";
           }
@@ -86,6 +94,7 @@ asyncHandler(async (req, res) => {
 
   // get current user's id
   const userNow = req.currentUser[0].dataValues.id;
+
 
   // find user in database and return
   const user = await User.findAll({
