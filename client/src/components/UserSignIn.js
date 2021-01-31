@@ -64,7 +64,8 @@ export default class UserSignIn extends Component {
 
         this.setState(() => {
             return {
-                [name]: value  
+                [name]: value,
+                errors: []  // clear errors before submit again
             };
         });
     }

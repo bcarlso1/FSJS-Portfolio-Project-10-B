@@ -15,7 +15,7 @@ export class Provider extends Component {
         // courseList: [],
         authenticatedUser: Cookies.getJSON('authenticatedUser') || null,
         currentPassword: Cookies.getJSON('currentPassword') || null,
-      
+        
       };
     this.data = new Data(); // this.data is new instance of Data class
 }
@@ -71,6 +71,7 @@ export class Provider extends Component {
         return {
           authenticatedUser: user,
           currentPassword: password,
+          
         };
       });
 
